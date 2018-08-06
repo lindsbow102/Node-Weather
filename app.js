@@ -1,5 +1,6 @@
-const request = require('request');
 const yargs = require('yargs');
+
+const geocode = require('./geocode/geocode');
 
 const argv = yargs
     .options({
@@ -10,23 +11,21 @@ const argv = yargs
             string: true
         }
     })
-    .help()
+    .help() // command 'node app.js --help' for info on options above
     .alias('help', 'h') // command would be 'node app.js --help' or 'node app.js --h'
     .argv;
+
+geocode.geocodeAddress(argv.address, (errorMessage, results) => {
+    if (errorMessage) {
+        console.log(errorMessage);
+    } else {
+        console.log(JSON.stringify(results, undefined, 2));
+    }
+});
 
 // to find encoded URI, enter 'node'
 // Then enter 'encodeURIComponent('6 burnbrae lane, sparta')'
 // or can enter 'decodeURIComponent('Lindsey%20Bowen')'
 
-console.log('Argv:', argv);
+//console.log('Argv:', argv);
 
-const encodedAddress = encodeURIComponent(argv.address);
-
-request({
-    url: `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}`,
-    json: true //Will take string and convert to object for us
-}, (error, response, body) => {
-    console.log(`Address: ${body.results[0].formatted_address}`); 
-    console.log(`Location--latitude: ${body.results[0].geometry.location.lat}`);
-    console.log(`Location--longitude: ${body.results[0].geometry.location.lng}`);
-});
