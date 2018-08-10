@@ -30,7 +30,11 @@ axios
   }).then((response) => {
     const temperature = response.data.currently.temperature;
     const apparentTemperature = response.data.currently.apparentTemperature;
+    const nearestStormDistance = response.data.currently.nearestStormDistance;
+    const precipProbability = response.data.currently.precipProbability;
     console.log(`It is currently ${temperature} degrees, but it feels like ${apparentTemperature}!`);
+    console.log('---------------------------------------');
+    console.log(`The nearest storm to this area is ${nearestStormDistance} miles away.  Chance of precipitation is ${precipProbability}%.`);
   })
   .catch(e => {
     if (e.code === "ENOTFOUND") {
